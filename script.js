@@ -1,12 +1,17 @@
-
-const tokenAddress = "0xf15e35d44ce5538f61884823fe546d391dc734f6";
+const tokenAddress = "0xB3f1aF8C19Dc3dAeF6e1D24e06A2C6D41966B8b3"; // Sepolia
 const tokenSymbol = "SLM";
 const tokenDecimals = 18;
-const tokenImage = "Solum_a_logo_design_fo.png";
 
-document.getElementById("addButton").addEventListener("click", async () => {
+document.getElementById("addTokenBtn").addEventListener("click", async () => {
+  if (typeof window.ethereum === "undefined") {
+    alert("Пожалуйста, установите MetaMask!");
+    return;
+  }
+
   try {
-    await window.ethereum.request({
+    await ethereum.request({ method: "eth_requestAccounts" });
+
+    const wasAdded = await ethereum.request({
       method: "wallet_watchAsset",
       params: {
         type: "ERC20",
@@ -14,45 +19,44 @@ document.getElementById("addButton").addEventListener("click", async () => {
           address: tokenAddress,
           symbol: tokenSymbol,
           decimals: tokenDecimals,
-          image: tokenImage,
         },
       },
     });
+
+    const status = document.getElementById("status");
+    if (wasAdded) {
+      status.textContent = "Токен SLM добавлен в MetaMask!";
+    } else {
+      status.textContent = "Добавление токена отменено.";
+    }
   } catch (error) {
     console.error(error);
+    document.getElementById("status").textContent = "Ошибка: " + error.message;
   }
 });
 
-const translations = {
-  en: {
-    title: "Solum",
-    description: "Decentralized token of the Solum network.",
-    addToMetaMask: "Add to MetaMask"
-  },
-  ru: {
-    title: "Солум",
-    description: "Децентрализованный токен сети Solum.",
-    addToMetaMask: "Добавить в MetaMask"
-  },
-  es: {
-    title: "Solum",
-    description: "Token descentralizado de la red Solum.",
-    addToMetaMask: "Agregar a MetaMask"
-  },
-  zh: {
-    title: "Solum",
-    description: "Solum 网络的去中心化代币。",
-    addToMetaMask: "添加到 MetaMask"
-  }
-};
+document.getElementById("transferBtn").addEventListener("click", async () => {
+  const recipient = prompt("Введите адрес получателя:");
+  const amount = prompt("Введите количество токенов для отправки:");
 
-function setLanguage(lang) {
-  const elements = document.querySelectorAll("[data-i18n]");
-  elements.forEach(el => {
-    const key = el.getAttribute("data-i18n");
-    if (translations[lang][key]) {
-      el.textContent = translations[lang][key];
-    }
-  });
-}
-setLanguage("en");
+  if (!recipient || !amount) return;
+
+  try {
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    await provider.send("eth_requestAccounts", []);
+    const signer = provider.getSigner();
+    const contract = new ethers.Contract(
+      tokenAddress,
+      [
+        "function transfer(address to, uint amount) public returns (bool)",
+      ],
+      signer
+    );
+
+    const tx = await contract.transfer(recipient, ethers.utils.parseUnits(amount, tokenDecimals));
+    document.getElementById("status").textContent = "Транзакция отправлена: " + tx.hash;
+  } catch (error) {
+    console.error(error);
+    document.getElementById("status").textContent = "Ошибка: " + error.message;
+  }
+});
