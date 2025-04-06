@@ -3,25 +3,164 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Solum — Decentralized Future</title>
-  <link rel="stylesheet" href="style.css" />
-  <script defer src="script.js"></script>
-  <link rel="icon" href="Solum_a_logo_design_fo.png" type="image/png" />
+  <title>Solum Token</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #111;
+      color: #eee;
+      text-align: center;
+    }
+    header {
+      padding: 1rem;
+      background-color: #222;
+    }
+    .logo {
+      width: 100px;
+      margin-bottom: 1rem;
+    }
+    .lang-switcher {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+    }
+    .lang-switcher select {
+      background: #333;
+      color: white;
+      border: none;
+      padding: 5px;
+      font-size: 1rem;
+    }
+    button {
+      background-color: #333;
+      color: #fff;
+      padding: 10px 20px;
+      margin: 1rem;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    button:hover {
+      background-color: #555;
+    }
+    footer {
+      padding: 1rem;
+      background-color: #222;
+      margin-top: 2rem;
+    }
+  </style>
 </head>
 <body>
-  <div class="container">
-    <img src="Solum_a_logo_design_fo.png" alt="Solum Logo" class="logo" />
-    <h1 data-i18n="title">Solum</h1>
-    <p data-i18n="description">Decentralized token of the Solum network.</p>
-
-    <button id="addButton" class="main-button" data-i18n="addToMetaMask">Add to MetaMask</button>
-
-    <div class="language-switcher">
-      <button onclick="setLanguage('en')" title="English">🌐</button>
-      <button onclick="setLanguage('ru')" title="Русский">🇷🇺</button>
-      <button onclick="setLanguage('es')" title="Español">🇪🇸</button>
-      <button onclick="setLanguage('zh')" title="中文">🇨🇳</button>
-    </div>
+  <div class="lang-switcher">
+    🌐
+    <select id="language" onchange="switchLanguage()">
+      <option value="en">EN</option>
+      <option value="ru">RU</option>
+      <option value="es">ES</option>
+      <option value="zh">中文</option>
+    </select>
   </div>
+  <header>
+    <img src="Solum_a_logo_design_fo.png.png" alt="Solum Logo" class="logo" />
+    <h1 id="title">Solum Token (SLM)</h1>
+    <p id="description">A decentralized and minimalist currency for future minds.</p>
+  </header>
+  <main>
+    <button onclick="addToken()" id="addButton">Add to MetaMask</button>
+    <button onclick="transferSLM()" id="transferButton">Transfer SLM</button>
+  </main>
+  <footer>
+    <p>© 2025 Solum Project</p>
+  </footer>
+
+  <script>
+    const tokenAddress = "0xf15e35d44ce5538f61884823fe546d391dc734f6";
+    const tokenSymbol = "SLM";
+    const tokenDecimals = 18;
+    const tokenImage = "https://github.com/Nyxara-AI-girl-Studio/solum-site/blob/main/Solum_a_logo_design_fo.png.png?raw=true";
+
+    const translations = {
+      en: {
+        title: "Solum Token (SLM)",
+        description: "A decentralized and minimalist currency for future minds.",
+        addButton: "Add to MetaMask",
+        transferButton: "Transfer SLM"
+      },
+      ru: {
+        title: "Токен Solum (SLM)",
+        description: "Децентрализованная и минималистичная валюта для умов будущего.",
+        addButton: "Добавить в MetaMask",
+        transferButton: "Перевести SLM"
+      },
+      es: {
+        title: "Token Solum (SLM)",
+        description: "Una moneda descentralizada y minimalista para mentes del futuro.",
+        addButton: "Agregar a MetaMask",
+        transferButton: "Transferir SLM"
+      },
+      zh: {
+        title: "Solum 代币 (SLM)",
+        description: "为未来思想打造的去中心化极简货币。",
+        addButton: "添加到 MetaMask",
+        transferButton: "转账 SLM"
+      }
+    };
+
+    function switchLanguage() {
+      const lang = document.getElementById("language").value;
+      document.getElementById("title").innerText = translations[lang].title;
+      document.getElementById("description").innerText = translations[lang].description;
+      document.getElementById("addButton").innerText = translations[lang].addButton;
+      document.getElementById("transferButton").innerText = translations[lang].transferButton;
+    }
+
+    async function addToken() {
+      try {
+        const wasAdded = await window.ethereum.request({
+          method: "wallet_watchAsset",
+          params: {
+            type: "ERC20",
+            options: {
+              address: tokenAddress,
+              symbol: tokenSymbol,
+              decimals: tokenDecimals,
+              image: tokenImage
+            }
+          }
+        });
+        if (wasAdded) {
+          console.log("Token added");
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    async function transferSLM() {
+      const recipient = prompt("Enter recipient address:");
+      const amount = prompt("Enter amount to transfer:");
+      if (!recipient || !amount) return;
+
+      const value = BigInt(parseFloat(amount) * 10 ** tokenDecimals).toString(16);
+
+      try {
+        await window.ethereum.request({
+          method: "eth_sendTransaction",
+          params: [{
+            to: tokenAddress,
+            from: ethereum.selectedAddress,
+            data: "0xa9059cbb" +
+              recipient.substring(2).padStart(64, "0") +
+              parseInt(value).toString(16).padStart(64, "0")
+          }]
+        });
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  </script>
 </body>
 </html>
