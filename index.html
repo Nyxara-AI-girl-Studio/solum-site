@@ -3,139 +3,25 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Solum — SLM Token</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      padding: 2rem;
-      background-color: #f9f9f9;
-    }
-    h1 {
-      font-size: 2.5rem;
-      margin-bottom: 0.5rem;
-    }
-    .logo {
-      width: 120px;
-      border-radius: 16px;
-    }
-    button {
-      margin: 0.5rem;
-      padding: 0.75rem 1.5rem;
-      font-size: 1rem;
-      border: none;
-      border-radius: 8px;
-      background-color: #007bff;
-      color: white;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #0056b3;
-    }
-    .lang-select {
-      position: absolute;
-      top: 1rem;
-      right: 1rem;
-    }
-  </style>
+  <title>Solum — Decentralized Future</title>
+  <link rel="stylesheet" href="style.css" />
+  <script defer src="script.js"></script>
+  <link rel="icon" href="Solum_a_logo_design_fo.png" type="image/png" />
 </head>
 <body>
-  <div class="lang-select">
-    <select id="language-select">
-      <option value="en">EN</option>
-      <option value="ru">РУ</option>
-      <option value="es">ES</option>
-      <option value="zh">中文</option>
-    </select>
+  <div class="container">
+    <img src="Solum_a_logo_design_fo.png" alt="Solum Logo" class="logo" />
+    <h1 data-i18n="title">Solum</h1>
+    <p data-i18n="description">Decentralized token of the Solum network.</p>
+
+    <button id="addButton" class="main-button" data-i18n="addToMetaMask">Add to MetaMask</button>
+
+    <div class="language-switcher">
+      <button onclick="setLanguage('en')" title="English">🌐</button>
+      <button onclick="setLanguage('ru')" title="Русский">🇷🇺</button>
+      <button onclick="setLanguage('es')" title="Español">🇪🇸</button>
+      <button onclick="setLanguage('zh')" title="中文">🇨🇳</button>
+    </div>
   </div>
-
-  <img src="https://github.com/Nyxara-AI-girl-Studio/solum-site/blob/main/Solum_a_logo_design_fo.png.png?raw=true" alt="Solum Logo" class="logo" />
-  <h1 id="title">Solum (SLM)</h1>
-  <p id="desc">Decentralized Token for the New World</p>
-
-  <button onclick="addTokenToMetaMask()" id="addToken">Add to MetaMask</button>
-  <button onclick="transferTokens()" id="transfer">Transfer SLM</button>
-
-  <script>
-    const tokenAddress = "0xf15e35d44ce5538f61884823fe546d391dc734f6";
-    const tokenSymbol = "SLM";
-    const tokenDecimals = 18;
-    const tokenImage = "https://github.com/Nyxara-AI-girl-Studio/solum-site/blob/main/Solum_a_logo_design_fo.png.png?raw=true";
-
-    async function addTokenToMetaMask() {
-      try {
-        await window.ethereum.request({
-          method: 'wallet_watchAsset',
-          params: {
-            type: 'ERC20',
-            options: {
-              address: tokenAddress,
-              symbol: tokenSymbol,
-              decimals: tokenDecimals,
-              image: tokenImage,
-            },
-          },
-        });
-      } catch (error) {
-        console.error(error);
-      }
-    }
-
-    async function transferTokens() {
-      const recipient = prompt("Enter recipient address:");
-      const amount = prompt("Enter amount of SLM to transfer:");
-
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const signer = provider.getSigner();
-      const abi = ["function transfer(address to, uint amount) public returns (bool)"];
-      const contract = new ethers.Contract(tokenAddress, abi, signer);
-
-      try {
-        const tx = await contract.transfer(recipient, ethers.utils.parseUnits(amount, tokenDecimals));
-        await tx.wait();
-        alert("Transfer successful");
-      } catch (err) {
-        alert("Transfer failed");
-        console.error(err);
-      }
-    }
-
-    const translations = {
-      en: {
-        title: "Solum (SLM)",
-        desc: "Decentralized Token for the New World",
-        addToken: "Add to MetaMask",
-        transfer: "Transfer SLM"
-      },
-      ru: {
-        title: "Солум (SLM)",
-        desc: "Децентрализованный токен для нового мира",
-        addToken: "Добавить в MetaMask",
-        transfer: "Перевести SLM"
-      },
-      es: {
-        title: "Solum (SLM)",
-        desc: "Token descentralizado para un nuevo mundo",
-        addToken: "Agregar a MetaMask",
-        transfer: "Transferir SLM"
-      },
-      zh: {
-        title: "Solum (SLM)",
-        desc: "面向新世界的去中心化代币",
-        addToken: "添加到 MetaMask",
-        transfer: "转账 SLM"
-      }
-    };
-
-    const langSelect = document.getElementById("language-select");
-    langSelect.addEventListener("change", () => {
-      const lang = langSelect.value;
-      document.getElementById("title").innerText = translations[lang].title;
-      document.getElementById("desc").innerText = translations[lang].desc;
-      document.getElementById("addToken").innerText = translations[lang].addToken;
-      document.getElementById("transfer").innerText = translations[lang].transfer;
-    });
-  </script>
-  <script src="https://cdn.jsdelivr.net/npm/ethers/dist/ethers.min.js"></script>
 </body>
 </html>
