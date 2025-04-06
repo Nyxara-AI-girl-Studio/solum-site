@@ -1,23 +1,23 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Solum</title>
-  <link rel="stylesheet" href="style.css" />
-  <script defer src="script.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solum</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="container">
-    <h1>Solum (SLM)</h1>
-    <p class="tagline">The root of value is within you.</p>
+    <div class="container">
+        <img src="seed-of-solum.png" alt="Seed of Solum" class="logo">
+        <h1>Solum</h1>
+        <p class="tagline">The seed of value is you.</p>
 
-    <div class="buttons">
-      <button id="addTokenBtn">Добавить SLM в MetaMask</button>
-      <button id="transferBtn">Отправить SLM</button>
+        <div class="buttons">
+            <button onclick="addToken()">Add SLM to MetaMask</button>
+            <button onclick="transferToken()">Transfer SLM</button>
+        </div>
     </div>
-
-    <p id="status"></p>
-  </div>
+    <script src="script.js"></script>
 </body>
 </html>

@@ -1,62 +1,59 @@
-const tokenAddress = "0xB3f1aF8C19Dc3dAeF6e1D24e06A2C6D41966B8b3"; // Sepolia
-const tokenSymbol = "SLM";
-const tokenDecimals = 18;
 
-document.getElementById("addTokenBtn").addEventListener("click", async () => {
-  if (typeof window.ethereum === "undefined") {
-    alert("Пожалуйста, установите MetaMask!");
-    return;
-  }
+async function addToken() {
+    try {
+        const wasAdded = await window.ethereum.request({
+            method: 'wallet_watchAsset',
+            params: {
+                type: 'ERC20',
+                options: {
+                    address: '0x1234567890abcdef1234567890abcdef12345678',
+                    symbol: 'SLM',
+                    decimals: 18,
+                    image: 'https://nyxara.github.io/solum-site/seed-of-solum.png',
+                },
+            },
+        });
 
-  try {
-    await ethereum.request({ method: "eth_requestAccounts" });
-
-    const wasAdded = await ethereum.request({
-      method: "wallet_watchAsset",
-      params: {
-        type: "ERC20",
-        options: {
-          address: tokenAddress,
-          symbol: tokenSymbol,
-          decimals: tokenDecimals,
-        },
-      },
-    });
-
-    const status = document.getElementById("status");
-    if (wasAdded) {
-      status.textContent = "Токен SLM добавлен в MetaMask!";
-    } else {
-      status.textContent = "Добавление токена отменено.";
+        if (wasAdded) {
+            console.log('Token added');
+        } else {
+            console.log('Token not added');
+        }
+    } catch (error) {
+        console.error(error);
     }
-  } catch (error) {
-    console.error(error);
-    document.getElementById("status").textContent = "Ошибка: " + error.message;
-  }
-});
+}
 
-document.getElementById("transferBtn").addEventListener("click", async () => {
-  const recipient = prompt("Введите адрес получателя:");
-  const amount = prompt("Введите количество токенов для отправки:");
+async function transferToken() {
+    const recipient = prompt("Enter recipient address:");
+    const amount = prompt("Enter amount of SLM to transfer:");
+    if (!recipient || !amount) return;
 
-  if (!recipient || !amount) return;
+    const contractAddress = '0x1234567890abcdef1234567890abcdef12345678';
+    const abi = [
+        {
+            "constant": false,
+            "inputs": [
+                { "name": "_to", "type": "address" },
+                { "name": "_value", "type": "uint256" }
+            ],
+            "name": "transfer",
+            "outputs": [{ "name": "", "type": "bool" }],
+            "type": "function"
+        }
+    ];
 
-  try {
     const provider = new ethers.providers.Web3Provider(window.ethereum);
-    await provider.send("eth_requestAccounts", []);
     const signer = provider.getSigner();
-    const contract = new ethers.Contract(
-      tokenAddress,
-      [
-        "function transfer(address to, uint amount) public returns (bool)",
-      ],
-      signer
-    );
+    const contract = new ethers.Contract(contractAddress, abi, signer);
 
-    const tx = await contract.transfer(recipient, ethers.utils.parseUnits(amount, tokenDecimals));
-    document.getElementById("status").textContent = "Транзакция отправлена: " + tx.hash;
-  } catch (error) {
-    console.error(error);
-    document.getElementById("status").textContent = "Ошибка: " + error.message;
-  }
-});
+    try {
+        const tx = await contract.transfer(recipient, ethers.utils.parseUnits(amount, 18));
+        console.log('Transaction sent:', tx.hash);
+        await tx.wait();
+        alert('Transfer successful!');
+    } catch (error) {
+        console.error(error);
+        alert('Transfer failed!');
+    }
+}
