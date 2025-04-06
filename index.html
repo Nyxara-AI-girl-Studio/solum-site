@@ -1,64 +1,60 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Solum (SLM) — Духовная криптовалюта</title>
-  <meta name="description" content="Solum — экспериментальная криптовалюта для исследователей сознания и свободы.">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <script src="https://cdn.jsdelivr.net/npm/web3@1.6.1/dist/web3.min.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Solum — SLM Token</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       text-align: center;
-      background: #f9f9f9;
-      color: #333;
-      margin: 0;
       padding: 2rem;
+      background-color: #f9f9f9;
     }
     h1 {
       font-size: 2.5rem;
+      margin-bottom: 0.5rem;
     }
-    p {
-      font-size: 1.1rem;
+    .logo {
+      width: 120px;
+      border-radius: 16px;
     }
     button {
-      margin-top: 20px;
-      padding: 12px 20px;
+      margin: 0.5rem;
+      padding: 0.75rem 1.5rem;
       font-size: 1rem;
-      background-color: #4CAF50;
-      color: white;
       border: none;
-      border-radius: 10px;
+      border-radius: 8px;
+      background-color: #007bff;
+      color: white;
       cursor: pointer;
     }
     button:hover {
-      background-color: #3e8e41;
+      background-color: #0056b3;
     }
-    img {
-      margin-top: 20px;
-      width: 120px;
-      height: 120px;
-      border-radius: 20px;
-    }
-    .token-info {
-      margin-top: 30px;
+    .lang-select {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
     }
   </style>
 </head>
 <body>
-
-  <h1>Solum (SLM)</h1>
-  <img src="https://github.com/Nyxara-AI-girl-Studio/solum-site/blob/main/Solum_a_logo_design_fo.png.png?raw=true" alt="Solum Logo">
-
-  <div class="token-info">
-    <p><strong>Контракт:</strong> <code>0xf15e35d44ce5538f61884823fe546d391dc734f6</code></p>
-    <p><strong>Название:</strong> Solum</p>
-    <p><strong>Символ:</strong> SLM</p>
-    <p><strong>Десятичные:</strong> 18</p>
-    <p><strong>Описание:</strong> Экспериментальная криптовалюта для тех, кто исследует внутреннюю свободу, сознание и новые формы ценности.</p>
+  <div class="lang-select">
+    <select id="language-select">
+      <option value="en">EN</option>
+      <option value="ru">РУ</option>
+      <option value="es">ES</option>
+      <option value="zh">中文</option>
+    </select>
   </div>
 
-  <button id="addToken">Добавить в MetaMask</button>
+  <img src="https://github.com/Nyxara-AI-girl-Studio/solum-site/blob/main/Solum_a_logo_design_fo.png.png?raw=true" alt="Solum Logo" class="logo" />
+  <h1 id="title">Solum (SLM)</h1>
+  <p id="desc">Decentralized Token for the New World</p>
+
+  <button onclick="addTokenToMetaMask()" id="addToken">Add to MetaMask</button>
+  <button onclick="transferTokens()" id="transfer">Transfer SLM</button>
 
   <script>
     const tokenAddress = "0xf15e35d44ce5538f61884823fe546d391dc734f6";
@@ -66,12 +62,12 @@
     const tokenDecimals = 18;
     const tokenImage = "https://github.com/Nyxara-AI-girl-Studio/solum-site/blob/main/Solum_a_logo_design_fo.png.png?raw=true";
 
-    document.getElementById("addToken").addEventListener("click", async () => {
+    async function addTokenToMetaMask() {
       try {
-        const wasAdded = await window.ethereum.request({
-          method: "wallet_watchAsset",
+        await window.ethereum.request({
+          method: 'wallet_watchAsset',
           params: {
-            type: "ERC20",
+            type: 'ERC20',
             options: {
               address: tokenAddress,
               symbol: tokenSymbol,
@@ -80,18 +76,66 @@
             },
           },
         });
-
-        if (wasAdded) {
-          alert("SLM добавлен в MetaMask!");
-        } else {
-          alert("Пользователь отменил добавление.");
-        }
       } catch (error) {
-        console.error("Ошибка:", error);
-        alert("MetaMask не доступен или произошла ошибка.");
+        console.error(error);
       }
+    }
+
+    async function transferTokens() {
+      const recipient = prompt("Enter recipient address:");
+      const amount = prompt("Enter amount of SLM to transfer:");
+
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      const abi = ["function transfer(address to, uint amount) public returns (bool)"];
+      const contract = new ethers.Contract(tokenAddress, abi, signer);
+
+      try {
+        const tx = await contract.transfer(recipient, ethers.utils.parseUnits(amount, tokenDecimals));
+        await tx.wait();
+        alert("Transfer successful");
+      } catch (err) {
+        alert("Transfer failed");
+        console.error(err);
+      }
+    }
+
+    const translations = {
+      en: {
+        title: "Solum (SLM)",
+        desc: "Decentralized Token for the New World",
+        addToken: "Add to MetaMask",
+        transfer: "Transfer SLM"
+      },
+      ru: {
+        title: "Солум (SLM)",
+        desc: "Децентрализованный токен для нового мира",
+        addToken: "Добавить в MetaMask",
+        transfer: "Перевести SLM"
+      },
+      es: {
+        title: "Solum (SLM)",
+        desc: "Token descentralizado para un nuevo mundo",
+        addToken: "Agregar a MetaMask",
+        transfer: "Transferir SLM"
+      },
+      zh: {
+        title: "Solum (SLM)",
+        desc: "面向新世界的去中心化代币",
+        addToken: "添加到 MetaMask",
+        transfer: "转账 SLM"
+      }
+    };
+
+    const langSelect = document.getElementById("language-select");
+    langSelect.addEventListener("change", () => {
+      const lang = langSelect.value;
+      document.getElementById("title").innerText = translations[lang].title;
+      document.getElementById("desc").innerText = translations[lang].desc;
+      document.getElementById("addToken").innerText = translations[lang].addToken;
+      document.getElementById("transfer").innerText = translations[lang].transfer;
     });
   </script>
-
+  <script src="https://cdn.jsdelivr.net/npm/ethers/dist/ethers.min.js"></script>
 </body>
 </html>
