@@ -1,72 +1,77 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Solum (SLM)</title>
-  <!-- Метаданные для страницы -->
-  <meta name="description" content="Solum (SLM) - a minimalist cryptocurrency rooted in mindfulness, simplicity, and balance.">
-  <meta name="keywords" content="Solum, SLM, cryptocurrency, blockchain, mindfulness, digital currency, Ethereum, fixed supply">
-  <meta property="og:title" content="Solum (SLM) - Mindful Digital Currency">
-  <meta property="og:description" content="Solum (SLM) is a peaceful, minimalist digital currency designed to promote mindfulness and balance in the blockchain world.">
-  <meta property="og:image" content="https://.../solum-logo.png"> <!-- Подставь свой логотип -->
-
+  <meta charset="UTF-8">
+  <title>Solum (SLM) — Духовная криптовалюта</title>
+  <meta name="description" content="Solum — экспериментальная криптовалюта для исследователей сознания и свободы.">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.jsdelivr.net/npm/web3@1.6.1/dist/web3.min.js"></script>
   <style>
     body {
-      font-family: 'Courier New', Courier, monospace;
-      background-color: #0f0f0f;
-      color: #e0e0e0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background: #f9f9f9;
+      color: #333;
       margin: 0;
+      padding: 2rem;
     }
     h1 {
       font-size: 2.5rem;
-      margin-bottom: 0.5rem;
     }
     p {
       font-size: 1.1rem;
-      max-width: 600px;
-      text-align: center;
-      margin-bottom: 2rem;
     }
     button {
-      background-color: #262626;
-      border: 1px solid #444;
-      border-radius: 8px;
-      padding: 0.75rem 1.5rem;
+      margin-top: 20px;
+      padding: 12px 20px;
       font-size: 1rem;
-      color: #e0e0e0;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 10px;
       cursor: pointer;
-      margin: 0.5rem;
     }
     button:hover {
-      background-color: #333;
+      background-color: #3e8e41;
+    }
+    img {
+      margin-top: 20px;
+      width: 120px;
+      height: 120px;
+      border-radius: 20px;
+    }
+    .token-info {
+      margin-top: 30px;
     }
   </style>
 </head>
 <body>
-  <h1>Solum (SLM)</h1>
-  <p>Solum (SLM) is a minimalist cryptocurrency rooted in mindfulness, simplicity, and balance. It is designed to serve as a peaceful and quiet digital currency, with a fixed supply and no inflation. Add Solum to your MetaMask wallet and start using it for transactions, or transfer it to friends and family to spread the idea of stillness in the blockchain world.</p>
 
-  <button id="addToken">➕ Add to MetaMask</button>
-  <button id="transferToken">🔁 Transfer SLM</button>
+  <h1>Solum (SLM)</h1>
+  <img src="https://github.com/Nyxara-AI-girl-Studio/solum-site/blob/main/Solum_a_logo_design_fo.png.png?raw=true" alt="Solum Logo">
+
+  <div class="token-info">
+    <p><strong>Контракт:</strong> <code>0xf15e35d44ce5538f61884823fe546d391dc734f6</code></p>
+    <p><strong>Название:</strong> Solum</p>
+    <p><strong>Символ:</strong> SLM</p>
+    <p><strong>Десятичные:</strong> 18</p>
+    <p><strong>Описание:</strong> Экспериментальная криптовалюта для тех, кто исследует внутреннюю свободу, сознание и новые формы ценности.</p>
+  </div>
+
+  <button id="addToken">Добавить в MetaMask</button>
 
   <script>
-    const tokenAddress = "0xf15e35d44ce5538f61884823fe546d391dc734f6"; // Адрес контракта SLM
+    const tokenAddress = "0xf15e35d44ce5538f61884823fe546d391dc734f6";
     const tokenSymbol = "SLM";
     const tokenDecimals = 18;
-    const tokenImage = "https://.../solum-logo.png"; // Подставь свой логотип на IPFS или ссылку
+    const tokenImage = "https://github.com/Nyxara-AI-girl-Studio/solum-site/blob/main/Solum_a_logo_design_fo.png.png?raw=true";
 
-    document.getElementById('addToken').addEventListener('click', async () => {
+    document.getElementById("addToken").addEventListener("click", async () => {
       try {
-        await window.ethereum.request({
-          method: 'wallet_watchAsset',
+        const wasAdded = await window.ethereum.request({
+          method: "wallet_watchAsset",
           params: {
-            type: 'ERC20',
+            type: "ERC20",
             options: {
               address: tokenAddress,
               symbol: tokenSymbol,
@@ -75,33 +80,18 @@
             },
           },
         });
+
+        if (wasAdded) {
+          alert("SLM добавлен в MetaMask!");
+        } else {
+          alert("Пользователь отменил добавление.");
+        }
       } catch (error) {
-        console.error(error);
-      }
-    });
-
-    document.getElementById('transferToken').addEventListener('click', async () => {
-      const recipient = prompt("Enter recipient address:");
-      const amount = prompt("Enter amount of SLM to send:");
-      if (!recipient || !amount) return;
-
-      const contractAbi = [
-        "function transfer(address to, uint amount) public returns (bool)"
-      ];
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const signer = provider.getSigner();
-      const contract = new ethers.Contract(tokenAddress, contractAbi, signer);
-
-      try {
-        const tx = await contract.transfer(recipient, ethers.utils.parseUnits(amount, tokenDecimals));
-        await tx.wait();
-        alert("Transfer successful!");
-      } catch (err) {
-        console.error(err);
-        alert("Transfer failed");
+        console.error("Ошибка:", error);
+        alert("MetaMask не доступен или произошла ошибка.");
       }
     });
   </script>
-  <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+
 </body>
 </html>
