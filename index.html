@@ -3,82 +3,63 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Solum (SLM) Token</title>
-  <link rel="icon" href="Solum_a_logo_design_fo.png.png" type="image/png" />
+  <title>Solum - Digital Token of Emergence</title>
+  <link rel="icon" href="Solum_a_logo_design_fo.png" />
+  <script src="https://cdn.jsdelivr.net/npm/ethers/dist/ethers.min.js"></script>
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: sans-serif;
       background-color: #0e0e0e;
-      color: #fff;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    header {
+      color: #f0f0f0;
       text-align: center;
-      padding: 2rem 1rem 1rem;
+      padding: 2rem;
     }
-    img {
-      max-width: 120px;
-      margin-bottom: 1rem;
-    }
-    h1 {
-      font-size: 2.5rem;
-      margin: 0.2rem;
-    }
-    p {
-      font-size: 1.2rem;
-      max-width: 700px;
-      text-align: center;
-      margin-bottom: 2rem;
-    }
-    .btn {
-      background-color: #fff;
-      color: #0e0e0e;
-      padding: 0.75rem 1.5rem;
-      font-size: 1rem;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
+    button {
+      padding: 0.6rem 1.2rem;
       margin: 0.5rem;
-      transition: background-color 0.3s;
+      font-size: 1rem;
+      border-radius: 8px;
+      border: none;
+      background-color: #5a27d5;
+      color: white;
+      cursor: pointer;
     }
-    .btn:hover {
-      background-color: #e0e0e0;
+    .logo {
+      max-width: 150px;
+      margin: 1rem auto;
     }
-    footer {
-      margin-top: 3rem;
-      padding: 2rem 1rem;
-      font-size: 0.9rem;
-      color: #aaa;
-      text-align: center;
+    .id-box {
+      background: #1c1c1c;
+      padding: 1rem;
+      border-radius: 12px;
+      margin-top: 1.5rem;
+      display: inline-block;
     }
   </style>
 </head>
 <body>
-  <header>
-    <img src="Solum_a_logo_design_fo.png.png" alt="Solum Logo" />
-    <h1>Solum (SLM)</h1>
-    <p>A minimal and decentralized crypto token prototype on Sepolia. No owners, no premine, no governance. Just code and community.</p>
-    <button class="btn" onclick="addTokenToMetaMask()">Add SLM to MetaMask</button>
-  </header>
+  <img src="Solum_a_logo_design_fo.png" alt="Solum Logo" class="logo" />
+  <h1>Solum (SLM)</h1>
+  <p>The digital token of emergence, simplicity and truth.</p>
+  <p>Token Address (Sepolia): <code id="tokenAddress">0xf15e35d44ce5538f61884823fe546d391dc734f6</code></p>
+  <button onclick="addTokenToMetaMask()">Add SLM to MetaMask</button>
+  <button onclick="transferSLM()">Transfer SLM</button>
 
-  <footer>
-    <p>Token address: <code>0xf15e35d44ce5538f61884823fe546d391dc734f6</code></p>
-    <p>&copy; 2025 Solum Project. Made with ❤️</p>
-  </footer>
+  <div class="id-box">
+    <h3>Your Solum ID</h3>
+    <p id="solumID">Connect wallet...</p>
+    <button onclick="copyID()">Copy Solum ID</button>
+  </div>
 
   <script>
-    async function addTokenToMetaMask() {
-      const tokenAddress = '0xf15e35d44ce5538f61884823fe546d391dc734f6';
-      const tokenSymbol = 'SLM';
-      const tokenDecimals = 18;
-      const tokenImage = 'https://raw.githubusercontent.com/Nyxara-AI-girl-Studio/solum-site/main/Solum_a_logo_design_fo.png.png';
+    const tokenAddress = "0xf15e35d44ce5538f61884823fe546d391dc734f6";
+    const tokenSymbol = "SLM";
+    const tokenDecimals = 18;
+    const tokenImage = "https://raw.githubusercontent.com/Nyxara-AI-girl-Studio/solum-site/main/Solum_a_logo_design_fo.png";
 
+    async function addTokenToMetaMask() {
       try {
-        const wasAdded = await window.ethereum.request({
+        const wasAdded = await ethereum.request({
           method: 'wallet_watchAsset',
           params: {
             type: 'ERC20',
@@ -90,16 +71,53 @@
             },
           },
         });
-
         if (wasAdded) {
           console.log('Token added');
-        } else {
-          console.log('Token not added');
         }
       } catch (error) {
-        console.error(error);
+        console.log(error);
       }
     }
+
+    async function transferSLM() {
+      if (!window.ethereum) return alert("MetaMask required");
+      await ethereum.request({ method: 'eth_requestAccounts' });
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      const recipient = prompt("Enter recipient address:");
+      const amount = prompt("Enter amount of SLM to send:");
+      const contract = new ethers.Contract(tokenAddress, [
+        "function transfer(address to, uint amount) returns (bool)"
+      ], signer);
+      await contract.transfer(recipient, ethers.utils.parseUnits(amount, tokenDecimals));
+      alert("Transfer complete");
+    }
+
+    function hashToName(addr) {
+      const seed = addr.slice(2, 10);
+      const nouns = ["seed", "void", "light", "pulse", "mind", "code", "star", "node"];
+      const adjs = ["silent", "solar", "dark", "open", "prime", "cyber", "meta", "deep"];
+      const i = parseInt(seed, 16);
+      return `${adjs[i % adjs.length]}-${nouns[(i >> 4) % nouns.length]}`;
+    }
+
+    async function generateSolumID() {
+      if (!window.ethereum) return;
+      await ethereum.request({ method: 'eth_requestAccounts' });
+      const address = ethereum.selectedAddress;
+      const nick = hashToName(address);
+      document.getElementById("solumID").innerText = `${nick} (${address.slice(0, 6)}...${address.slice(-4)})`;
+    }
+
+    function copyID() {
+      const text = document.getElementById("solumID").innerText;
+      navigator.clipboard.writeText(text);
+      alert("Solum ID copied!");
+    }
+
+    window.addEventListener('load', () => {
+      if (window.ethereum) generateSolumID();
+    });
   </script>
 </body>
 </html>
