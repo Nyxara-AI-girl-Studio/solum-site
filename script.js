@@ -1,59 +1,60 @@
 
-async function addToken() {
-    try {
-        const wasAdded = await window.ethereum.request({
-            method: 'wallet_watchAsset',
-            params: {
-                type: 'ERC20',
-                options: {
-                    address: '0x1234567890abcdef1234567890abcdef12345678',
-                    symbol: 'SLM',
-                    decimals: 18,
-                    image: 'https://nyxara.github.io/solum-site/seed-of-solum.png',
-                },
-            },
-        });
-
-        if (wasAdded) {
-            console.log('Token added');
-        } else {
-            console.log('Token not added');
-        }
-    } catch (error) {
-        console.error(error);
+function setLanguage(lang) {
+  const translations = {
+    en: {
+      title: "Solum: The Soil of Value",
+      claimTitle: "Claim Your Seed of Solum",
+      claimButton: "Claim NFT",
+      idTitle: "Generate Your Solum ID",
+      generateButton: "Generate",
+      footerText: "© 2025 Solum Project — All rights decentralized."
+    },
+    ru: {
+      title: "Solum: Почва Ценности",
+      claimTitle: "Получите своё Семя Solum",
+      claimButton: "Получить NFT",
+      idTitle: "Создайте свой Solum ID",
+      generateButton: "Создать",
+      footerText: "© 2025 Solum Project — Все права децентрализованы."
+    },
+    es: {
+      title: "Solum: El Suelo del Valor",
+      claimTitle: "Reclama tu Semilla de Solum",
+      claimButton: "Reclamar NFT",
+      idTitle: "Genera tu Solum ID",
+      generateButton: "Generar",
+      footerText: "© 2025 Proyecto Solum — Todos los derechos descentralizados."
+    },
+    zh: {
+      title: "Solum：价值之土",
+      claimTitle: "领取你的Solum种子",
+      claimButton: "领取NFT",
+      idTitle: "生成你的Solum ID",
+      generateButton: "生成",
+      footerText: "© 2025 Solum项目 — 所有权利已去中心化。"
     }
+  };
+
+  const t = translations[lang];
+  if (t) {
+    document.getElementById("title").textContent = t.title;
+    document.getElementById("claimTitle").textContent = t.claimTitle;
+    document.getElementById("claimButton").textContent = t.claimButton;
+    document.getElementById("idTitle").textContent = t.idTitle;
+    document.getElementById("generateButton").textContent = t.generateButton;
+    document.getElementById("footerText").textContent = t.footerText;
+  }
 }
 
-async function transferToken() {
-    const recipient = prompt("Enter recipient address:");
-    const amount = prompt("Enter amount of SLM to transfer:");
-    if (!recipient || !amount) return;
+function claimNFT() {
+  alert("Claiming NFT is not implemented yet.");
+}
 
-    const contractAddress = '0x1234567890abcdef1234567890abcdef12345678';
-    const abi = [
-        {
-            "constant": false,
-            "inputs": [
-                { "name": "_to", "type": "address" },
-                { "name": "_value", "type": "uint256" }
-            ],
-            "name": "transfer",
-            "outputs": [{ "name": "", "type": "bool" }],
-            "type": "function"
-        }
-    ];
-
-    const provider = new ethers.providers.Web3Provider(window.ethereum);
-    const signer = provider.getSigner();
-    const contract = new ethers.Contract(contractAddress, abi, signer);
-
-    try {
-        const tx = await contract.transfer(recipient, ethers.utils.parseUnits(amount, 18));
-        console.log('Transaction sent:', tx.hash);
-        await tx.wait();
-        alert('Transfer successful!');
-    } catch (error) {
-        console.error(error);
-        alert('Transfer failed!');
-    }
+function generateSolumID() {
+  const adjectives = ["Ancient", "Luminous", "Hidden", "Silent", "Primordial"];
+  const nouns = ["Seed", "Stone", "Flame", "Wind", "Root"];
+  const adj = adjectives[Math.floor(Math.random() * adjectives.length)];
+  const noun = nouns[Math.floor(Math.random() * nouns.length)];
+  const id = `${adj}-${noun}-${Math.floor(Math.random() * 10000)}`;
+  document.getElementById("solumID").textContent = id;
 }

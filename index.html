@@ -1,23 +1,44 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Solum</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Solum</title>
+  <link rel="stylesheet" href="style.css"/>
+  <link rel="icon" href="solum-logo-b.png" type="image/png"/>
 </head>
 <body>
-    <div class="container">
-        <img src="seed-of-solum.png" alt="Seed of Solum" class="logo">
-        <h1>Solum</h1>
-        <p class="tagline">The seed of value is you.</p>
-
-        <div class="buttons">
-            <button onclick="addToken()">Add SLM to MetaMask</button>
-            <button onclick="transferToken()">Transfer SLM</button>
-        </div>
+  <header>
+    <img src="solum-logo-b.png" alt="Solum Logo" class="logo"/>
+    <h1 id="title">Solum: The Soil of Value</h1>
+    <div class="lang-switch">
+      <button onclick="setLanguage('en')">🌐</button>
+      <div class="lang-dropdown" id="langDropdown">
+        <a href="#" onclick="setLanguage('en')">English</a>
+        <a href="#" onclick="setLanguage('ru')">Русский</a>
+        <a href="#" onclick="setLanguage('es')">Español</a>
+        <a href="#" onclick="setLanguage('zh')">中文</a>
+      </div>
     </div>
-    <script src="script.js"></script>
+  </header>
+
+  <main>
+    <section class="claim-nft">
+      <h2 id="claimTitle">Claim Your Seed of Solum</h2>
+      <img src="seed-of-solum.png" alt="Seed NFT" class="nft-image"/>
+      <button onclick="claimNFT()" id="claimButton">Claim NFT</button>
+    </section>
+    <section class="generate-id">
+      <h2 id="idTitle">Generate Your Solum ID</h2>
+      <button onclick="generateSolumID()" id="generateButton">Generate</button>
+      <div id="solumID"></div>
+    </section>
+  </main>
+
+  <footer>
+    <p id="footerText">© 2025 Solum Project — All rights decentralized.</p>
+  </footer>
+
+  <script src="script.js"></script>
 </body>
 </html>
