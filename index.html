@@ -3,31 +3,35 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Solum: The Soil of Value</title>
     <link rel="stylesheet" href="style.css" />
 </head>
 <body>
     <header>
-        <div class="logo">Solum Logo</div>
+        <img src="solum-logo-b.png" alt="Solum Logo" class="logo">
         <h1>Solum: The Soil of Value</h1>
-        <div class="language-icon">🌐</div>
+        <div class="language-selector">🌐</div>
     </header>
+
     <main>
-        <section class="nft-section">
+        <section class="claim-section">
             <h2>Claim Your Seed of Solum</h2>
-            <img src="seed-nft.png" alt="Solum Seed NFT" class="nft-image" />
-            <button class="claim-button">Claim NFT</button>
+            <img src="seed-of-solum.png" alt="Seed of Solum" class="seed-image">
+            <p>Solum Seed NFT</p>
+            <button onclick="claimNFT()">Claim NFT</button>
         </section>
-        <section class="id-generator">
+
+        <section class="generate-section">
             <h2>Generate Your Solum ID</h2>
-            <button class="generate-button" onclick="generateID()">Generate</button>
-            <div id="solum-id"></div>
+            <button onclick="generateSolumID()">Generate</button>
         </section>
     </main>
+
     <footer>
         <p>© 2025 Solum Project — All rights decentralized.</p>
     </footer>
+
     <script src="script.js"></script>
 </body>
 </html>
