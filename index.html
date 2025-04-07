@@ -2,36 +2,40 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Solum: The Soil of Value</title>
-    <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Solum</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="icon" href="img/solum-logo-b.png" />
 </head>
 <body>
-    <header>
-        <img src="solum-logo-b.png" alt="Solum Logo" class="logo">
-        <h1>Solum: The Soil of Value</h1>
-        <div class="language-selector">🌐</div>
-    </header>
+  <header>
+    <img src="img/solum-logo-b.png" alt="Solum Logo" class="logo" />
+    <h1>Solum</h1>
+    <p class="tagline">Digital Soil for a New Civilization</p>
+  </header>
 
-    <main>
-        <section class="claim-section">
-            <h2>Claim Your Seed of Solum</h2>
-            <img src="seed-of-solum.png" alt="Seed of Solum" class="seed-image">
-            <p>Solum Seed NFT</p>
-            <button onclick="claimNFT()">Claim NFT</button>
-        </section>
+  <main>
+    <section class="intro">
+      <p>Solum (SLM) — экспериментальный токен, семя цифровой культуры. Без ICO, без владельца, без цели. Только ты и пустота. Задумайся: что ты посеешь?</p>
+    </section>
 
-        <section class="generate-section">
-            <h2>Generate Your Solum ID</h2>
-            <button onclick="generateSolumID()">Generate</button>
-        </section>
-    </main>
+    <section class="buttons">
+      <button onclick="addToken()">Добавить в MetaMask</button>
+      <button onclick="transferToken()">Transfer SLM</button>
+    </section>
 
-    <footer>
-        <p>© 2025 Solum Project — All rights decentralized.</p>
-    </footer>
+    <section class="nft">
+      <h2>Claim Seed of Solum</h2>
+      <img src="img/seed-of-solum.png" alt="Seed of Solum" class="nft-image" />
+      <button onclick="claimNFT()">Claim NFT</button>
+    </section>
+  </main>
 
-    <script src="script.js"></script>
+  <footer>
+    <p>© 2025 Solum. No Rights Reserved.</p>
+  </footer>
+
+  <script src="js/script.js"></script>
 </body>
 </html>
